@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Crimson Requiem — Reroll Shop Demo</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Inter:wght@400;600;700&display=swap');
+
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  min-height:100vh;
+  color:#f7eee9;
+  font-family:Inter,Arial,sans-serif;
+  background:
+    radial-gradient(circle at 80% 10%, rgba(132,18,27,.55), transparent 30%),
+    radial-gradient(circle at 10% 80%, rgba(91,10,20,.45), transparent 30%),
+    linear-gradient(135deg,#090708 0%,#170a0d 48%,#080607 100%);
+}
+body:before{
+  content:"";
+  position:fixed;inset:0;pointer-events:none;opacity:.08;
+  background-image:linear-gradient(115deg,transparent 47%,#fff 48%,transparent 49%);
+  background-size:55px 55px;
+}
+
+body:after{
+  content:"";
+  position:fixed; inset:0; pointer-events:none; z-index:0;
+  opacity:.16;
+  background:
+    linear-gradient(45deg, transparent 46%, rgba(210,40,52,.8) 47%, transparent 49%) 0 0/42px 42px,
+    linear-gradient(-45deg, transparent 46%, rgba(245,225,210,.35) 47%, transparent 49%) 0 0/42px 42px;
+  mix-blend-mode:screen;
+}
+header, main, footer{position:relative;z-index:1}
+header{
+  border-bottom:1px solid rgba(235,185,165,.28);
+  box-shadow:0 4px 25px rgba(0,0,0,.45);
+}
+.logo:before{
+  content:"◆ ";
+  color:#d52b3b;
+}
+.logo span{color:#e8d8d0}
+
+header{
+  position:sticky;top:0;z-index:10;
+  padding:18px 7%;
+  display:flex;align-items:center;justify-content:space-between;
+  background:rgba(8,6,7,.88);backdrop-filter:blur(12px);
+  border-bottom:1px solid rgba(206,40,50,.35);
+}
+.logo{font-family:Cinzel,serif;letter-spacing:3px;font-weight:700}
+.logo span{color:#c92535}
+nav a{color:#ddd;text-decoration:none;margin-left:24px;font-size:14px}
+nav a:hover{color:#e33b4b}
+.hero{
+  padding:85px 7% 55px;display:grid;grid-template-columns:1.15fr .85fr;
+  gap:40px;align-items:center;max-width:1250px;margin:auto;
+}
+.kicker{color:#d52b3b;text-transform:uppercase;letter-spacing:4px;font-size:12px;font-weight:700}
+h1{font-family:Cinzel,serif;font-size:clamp(42px,6vw,76px);line-height:1.02;margin:12px 0}
+.hero p{color:#c8bfc0;max-width:620px;line-height:1.7}
+.cta{
+  display:inline-block;margin-top:25px;padding:13px 22px;
+  background:linear-gradient(135deg,#8e1422,#c92b3d 55%,#6f0f1b);color:white;text-decoration:none;font-weight:700;
+  border:1px solid #ed5360;box-shadow:0 8px 30px rgba(181,31,46,.25)
+}
+.emblem{
+  width:290px;height:290px;margin:auto;border-radius:50%;
+  border:1px solid #a72330;display:grid;place-items:center;
+  background:
+    linear-gradient(45deg, transparent 47%, rgba(220,45,58,.8) 48%, transparent 50%) 0 0/28px 28px,
+    linear-gradient(-45deg, transparent 47%, rgba(245,225,210,.28) 48%, transparent 50%) 0 0/28px 28px,
+    radial-gradient(circle,#3b1118 0 35%,#12090c 36% 62%,#080607 63%);
+  box-shadow:0 0 70px rgba(185,24,41,.32),inset 0 0 35px #000;
+  text-align:center;font-family:Cinzel,serif;letter-spacing:2px
+}
+.emblem b{font-size:55px;color:#d52b3b}
+section{max-width:1100px;margin:auto;padding:35px 7% 80px}
+.section-title{font-family:Cinzel,serif;font-size:30px;margin-bottom:8px;letter-spacing:1px}
+.section-title:before{content:"◆  ";color:#c92535;font-size:15px}
+.section-title:after{content:"  ◆";color:#c92535;font-size:15px}
+.muted{color:#9f9597;font-size:14px;margin-bottom:25px}
+.shop{
+  display:grid;grid-template-columns:1.25fr .75fr;gap:22px
+}
+.card{
+  background:rgba(20,12,14,.9);border:1px solid rgba(210,43,57,.35);
+  padding:25px;box-shadow:0 15px 50px rgba(0,0,0,.3);
+  position:relative; overflow:hidden;
+}
+.card:before{
+  content:"";
+  position:absolute; inset:0; pointer-events:none;
+  border:1px solid rgba(235,205,190,.08);
+  background:
+    linear-gradient(45deg, transparent 48%, rgba(200,40,52,.12) 49%, transparent 51%) 0 0/24px 24px;
+}
+label{display:block;font-weight:700;margin-bottom:10px}
+input[type=range]{width:100%;accent-color:#c52a39}
+.range-row{display:flex;justify-content:space-between;color:#aaa;font-size:13px}
+.amount{
+  font-family:Cinzel,serif;font-size:38px;color:#fff;margin:18px 0 5px
+}
+.price{font-size:28px;color:#e14a57;font-weight:700}
+.server-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:18px}
+.server{
+  padding:12px;text-align:center;border:1px solid #493034;cursor:pointer;
+  background:#120b0d;color:#c9c0c1
+}
+.server.active{border-color:#d73b49;background:#321116;color:#fff}
+.features{margin-top:25px;display:grid;gap:10px;color:#bdb3b4;font-size:14px}
+.summary h3{font-family:Cinzel,serif;margin-bottom:18px}
+.summary-row{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid #342326}
+.notice{
+  margin-top:18px;padding:13px;background:#241116;border-left:3px solid #c52a39;
+  color:#bfb3b5;font-size:12px;line-height:1.55
+}
+.demo-btn{
+  width:100%;padding:14px;margin-top:20px;border:0;cursor:pointer;
+  background:linear-gradient(135deg,#8e1422,#d02e40 55%,#74101d);color:white;font-weight:700
+}
+.demo-btn:hover{background:#dc3545}
+footer{text-align:center;padding:30px;color:#746a6c;border-top:1px solid #26191b;font-size:12px}
+@media(max-width:800px){
+ .hero,.shop{grid-template-columns:1fr}.emblem{width:220px;height:220px}
+ nav{display:none}.hero{padding-top:55px}
+}
+
+.discord-float{position:fixed;top:18px;right:24px;z-index:30;width:46px;height:46px;border-radius:50%;display:grid;place-items:center;background:#5865F2;color:#fff;text-decoration:none;font-weight:700;font-size:20px;box-shadow:0 8px 25px rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.25);cursor:pointer}
+.discord-float:hover{transform:translateY(-2px);background:#6d78ff}
+.discord-popup{position:fixed;top:74px;right:24px;z-index:29;background:#120b0d;border:1px solid #c52a39;padding:14px 18px;min-width:220px;box-shadow:0 15px 45px rgba(0,0,0,.5);display:none}
+.discord-popup.show{display:block}
+.discord-popup small{display:block;color:#9f9597;margin-bottom:5px}
+.discord-popup b{color:#fff}
+.discord-popup a{color:#d73b49;text-decoration:none}
+.no-refund{margin-top:14px;padding:12px 14px;background:#241116;border-left:3px solid #c52a39;color:#eee;font-size:12px;line-height:1.5}
+
+.payment-modal{position:fixed;inset:0;z-index:100;display:none;place-items:center;background:rgba(0,0,0,.78);backdrop-filter:blur(8px);padding:20px}
+.payment-modal.show{display:grid}
+.payment-box{width:min(520px,100%);background:linear-gradient(145deg,#16090d,#080607);border:1px solid #c52a39;box-shadow:0 25px 90px rgba(0,0,0,.65),0 0 35px rgba(197,42,57,.18);padding:30px;position:relative;text-align:center}
+.payment-box h2{font-family:Cinzel,serif;font-size:30px;margin-bottom:10px;color:#fff}
+.payment-box p{color:#c8bfc0;line-height:1.65;margin:8px 0}
+.paypal-link{display:block;margin:20px 0 12px;padding:14px;background:#c32939;color:#fff;text-decoration:none;font-weight:700;border:1px solid #ed5360}
+.discord-note{margin-top:16px;padding:14px;background:#241116;border-left:3px solid #c52a39;color:#ddd;line-height:1.55}
+.close-modal{position:absolute;right:12px;top:8px;background:none;border:0;color:#aaa;font-size:28px;cursor:pointer}
+</style>
+</head>
+<body>
+<a class="discord-float" href="https://discord.gg/qrVpJMvBdn" target="_blank" rel="noopener" aria-label="Contact on Discord">◉</a>
+<div class="discord-popup" id="discordPopup"><small>Discord — questions &amp; support</small><b>Chat with the seller</b><br><a href="https://discord.gg/qrVpJMvBdn" target="_blank" rel="noopener">Join Discord</a></div>
+
+<header>
+  <div class="logo">CRIMSON <span>REQUiem</span></div>
+  <nav><a href="#shop">SHOP</a><a href="#how">HOW IT WORKS</a><a href="#faq">FAQ</a></nav>
+</header>
+
+<main>
+<section class="hero">
+  <div>
+    <div class="kicker">Reroll Account Store • Demo</div>
+    <h1>Crimson<br>Requiem</h1>
+    <p>A dark red, theatrical storefront concept inspired by the elegant Harbinger aesthetic. Choose the amount of Primogems for a fictional starter-account package and preview the total instantly.</p>
+    <a class="cta" href="#shop">BUILD YOUR PACKAGE</a>
+  </div>
+  <div class="emblem"><div><b>♠</b><br>THE HOUSE<br>OF CRIMSON</div></div>
+</section>
+
+<section id="shop">
+  <div class="section-title">Build Your Reroll Package</div>
+  <div class="notice" style="margin-bottom:25px">
+      <b style="color:white">Before buying:</b> Your order will be prepared in approximately <b style="color:white">1–2 days</b> because the seller needs time to grind the account. Thank you for your patience!
+    </div>
+    <div class="muted">Pricing: $1 per 160 Primogems. PayPal only. No refunds.</div>
+
+  <div class="shop">
+    <div class="card">
+      <label for="gems">Primogems</label>
+      <input id="gems" type="range" min="160" max="16000" step="160" value="1600">
+      <div class="range-row"><span>150</span><span>15,000</span></div>
+      <div class="amount"><span id="gemText">1,500</span> Primogems</div>
+      <div class="price">$<span id="price">10.00</span></div>
+
+      <label style="margin-top:25px">Server</label>
+      <div class="server-grid">
+        <div class="server active" data-server="America">America</div>
+        <div class="server" data-server="Europe">Europe</div>
+      </div>
+
+      <label style="margin-top:25px">Currency</label>
+      <select id="currency" style="width:100%;padding:12px;background:#120b0d;color:#fff;border:1px solid #493034">
+        <option value="USD">$ USD</option>
+        <option value="AUD">A$ AUD</option>
+        <option value="BRL">R$ BRL</option>
+        <option value="CAD">C$ CAD</option>
+        <option value="CNY">¥ CNY</option>
+        <option value="CZK">Kč CZK</option>
+        <option value="DKK">kr DKK</option>
+        <option value="EUR">€ EUR</option>
+        <option value="HKD">HK$ HKD</option>
+        <option value="HUF">Ft HUF</option>
+        <option value="ILS">₪ ILS</option>
+        <option value="JPY">¥ JPY</option>
+        <option value="MYR">RM MYR</option>
+        <option value="MXN">$ MXN</option>
+        <option value="TWD">NT$ TWD</option>
+        <option value="NZD">NZ$ NZD</option>
+        <option value="NOK">kr NOK</option>
+        <option value="PHP">₱ PHP</option>
+        <option value="PLN">zł PLN</option>
+        <option value="GBP">£ GBP</option>
+        <option value="SGD">S$ SGD</option>
+        <option value="SEK">kr SEK</option>
+        <option value="CHF">CHF</option>
+        <option value="THB">฿ THB</option>
+      </select>
+      <div id="exchangeRate" style="margin-top:10px;color:#aaa;font-size:13px;text-align:center">1 United States Dollar equals 1.00 USD</div>
+
+      <label style="margin-top:25px">Payment Method</label>
+      <div class="server-grid">
+        <div class="server active" data-payment="PayPal">PayPal</div>
+        
+      </div>
+
+      <div class="features">
+        <div>✓ Starter account package</div>
+        <div>✓ Primogem amount selected by buyer</div>
+        <div>✓ Server selection</div>
+        <div>✓ Instant price preview</div>
+         <div>✓ No refunds</div>
+      </div>
+    </div>
+
+    <div class="card summary">
+      <h3>Order Preview</h3>
+      <div class="summary-row"><span>Package</span><b>Custom Reroll</b></div>
+      <div class="summary-row"><span>Primogems</span><b id="sumGems">1,500</b></div>
+      <div class="summary-row"><span>Server</span><b id="sumServer">America</b></div>
+      <div class="summary-row"><span>Payment</span><b id="sumPayment">PayPal</b></div>
+      <div class="summary-row"><span>Total</span><b><span id="sumPrice">$10.00</span></b></div>
+      <button class="demo-btn" onclick="demo()">PREVIEW CHECKOUT</button>
+      <a class="demo-btn" style="display:block;text-align:center;text-decoration:none;margin-top:10px" href="https://discord.gg/qrVpJMvBdn" target="_blank" rel="noopener">CHAT SELLER ON DISCORD</a>
+      <div style="text-align:center;margin-top:12px;color:#9f9597;font-size:12px"></div>
+      <div class="notice">Demo storefront only. This page does not collect passwords, payment details, or game-account credentials. Check the game's current terms before using any account-transfer service.</div>
+    </div>
+  </div>
+</section>
+
+<section id="how">
+  <div class="section-title">How It Works</div>
+  <div class="muted">A simple three-step storefront flow.</div>
+  <div class="card">
+    <p style="line-height:1.9;color:#c9c0c1">
+      <b>01 — Choose</b> your Primogem amount and server.<br>
+      <b>02 — Review</b> the package and displayed price.<br>
+      <b>03 — Checkout</b> through a properly configured payment system on a real production site.
+    </p>
+  </div>
+</section>
+
+<section id="faq">
+  <div class="section-title">FAQ</div>
+  <div class="card" style="line-height:1.8;color:#bdb3b4">
+    <b style="color:white">Can I change the Primogem amount?</b><br>
+    Yes. Use the slider from 160 to 16,000 in 160-gem increments.<br><br>
+    <b style="color:white">Can this demo accept real orders?</b><br>
+    No. It is intentionally a front-end demonstration and has no real checkout, account credentials, or fulfillment backend.
+  </div>
+</section>
+</main>
+
+<footer>CRIMSON REQUIEM — FAN-MADE UI CONCEPT • Not affiliated with HoYoverse</footer>
+
+<script>
+const gems = document.getElementById('gems');
+const gemText = document.getElementById('gemText');
+const price = document.getElementById('price');
+const sumGems = document.getElementById('sumGems');
+const sumPrice = document.getElementById('sumPrice');
+const sumServer = document.getElementById('sumServer');
+const sumPayment = document.getElementById('sumPayment');
+const currency = document.getElementById('currency');
+const currencyRates = {
+  USD:1, AUD:null, BRL:null, CAD:null, CNY:null, CZK:null, DKK:null, EUR:null,
+  HKD:null, HUF:null, ILS:null, JPY:null, MYR:null, MXN:null, TWD:null,
+  NZD:null, NOK:null, PHP:null, PLN:null, GBP:null, SGD:null, SEK:null,
+  CHF:null, THB:null
+};
+const currencySymbols = {
+  USD:'$', AUD:'A$', BRL:'R$', CAD:'C$', CNY:'¥', CZK:'Kč', DKK:'kr', EUR:'€',
+  HKD:'HK$', HUF:'Ft', ILS:'₪', JPY:'¥', MYR:'RM', MXN:'MX$', TWD:'NT$', NZD:'NZ$',
+  NOK:'kr', PHP:'₱', PLN:'zł', GBP:'£', SGD:'S$', SEK:'kr', CHF:'CHF ', THB:'฿'
+};
+const currencyNames = {
+  USD:'United States Dollar', AUD:'Australian Dollar', BRL:'Brazilian Real', CAD:'Canadian Dollar',
+  CNY:'Chinese Yuan', CZK:'Czech Koruna', DKK:'Danish Krone', EUR:'Euro', HKD:'Hong Kong Dollar',
+  HUF:'Hungarian Forint', ILS:'Israeli New Shekel', JPY:'Japanese Yen', MYR:'Malaysian Ringgit',
+  MXN:'Mexican Peso', TWD:'New Taiwan Dollar', NZD:'New Zealand Dollar', NOK:'Norwegian Krone',
+  PHP:'Philippine Peso', PLN:'Polish Zloty', GBP:'British Pound', SGD:'Singapore Dollar',
+  SEK:'Swedish Krona', CHF:'Swiss Franc', THB:'Thai Baht'
+};
+const currencyDecimals = {JPY:0, HUF:0, TWD:0};
+
+async function loadCurrencyRates(){
+  const rateBox = document.getElementById('exchangeRate');
+  rateBox.textContent = 'Loading live USD exchange rates…';
+  try {
+    // Live daily reference rates, USD as the fixed base.
+    const response = await fetch('https://api.frankfurter.dev/v2/rates?base=USD', {cache:'no-store'});
+    if(!response.ok) throw new Error('Rate request failed');
+    const rows = await response.json();
+    rows.forEach(row => {
+      if(currencyRates.hasOwnProperty(row.quote) && typeof row.rate === 'number') {
+        currencyRates[row.quote] = row.rate;
+      }
+    });
+    update();
+  } catch (e) {
+    rateBox.textContent = 'Live exchange rates unavailable. Please try again.';
+    update(true);
+  }
+}
+
+function update(rateError=false){
+  const g = Number(gems.value);
+  // FIXED PRICING: 160 Primogems = exactly $1 USD.
+  // Every other currency is ONLY a conversion of that USD price.
+  const usdPrice = g / 160;
+  const formatted = g.toLocaleString();
+  gemText.textContent = formatted;
+  sumGems.textContent = formatted;
+  const cur = currency.value;
+  const rate = cur === 'USD' ? 1 : currencyRates[cur];
+  const decimals = currencyDecimals[cur] ?? 2;
+
+  if(rateError || typeof rate !== 'number'){
+    price.textContent = 'Unavailable';
+    sumPrice.textContent = 'Unavailable';
+    return;
+  }
+
+  const converted = usdPrice * rate;
+  const display = currencySymbols[cur] + converted.toFixed(decimals);
+  price.textContent = display;
+  sumPrice.textContent = display;
+
+  const rateText = cur === 'USD'
+    ? '1 United States Dollar equals 1.00 USD'
+    : `1 United States Dollar equals ${rate.toFixed(2)} ${cur}`;
+  document.getElementById('exchangeRate').textContent = rateText;
+}
+
+gems.addEventListener('input', () => update());
+currency.addEventListener('change', () => update());
+loadCurrencyRates();
+
+
+document.querySelectorAll('.server[data-server]').forEach(el=>{
+  el.addEventListener('click',()=>{
+    document.querySelectorAll('.server[data-server]').forEach(x=>x.classList.remove('active'));
+    el.classList.add('active');
+    sumServer.textContent = el.dataset.server;
+  });
+});
+sumPayment.textContent = 'PayPal';
+function toggleDiscord(e){ e.preventDefault(); document.getElementById('discordPopup').classList.toggle('show'); }
+
+function demo(){
+  const modal = document.getElementById('paymentModal');
+  if(modal) modal.classList.add('show');
+}
+function closePayment(){
+  const modal = document.getElementById('paymentModal');
+  if(modal) modal.classList.remove('show');
+}
+update();
+loadCurrencyRates();
+</script>
+
+<div id="paymentModal" class="payment-modal" onclick="if(event.target===this) closePayment()">
+  <div class="payment-box">
+    <button class="close-modal" onclick="closePayment()" aria-label="Close">×</button>
+    <h2>Please Pay Here</h2>
+    <p>Complete your payment through PayPal using the button below.</p>
+    <div class="discord-note" style="margin-top:14px;border-left-color:#d52b3b">
+      <b style="color:white">Important step!!</b><br>
+      Please pick <b style="color:white">Friends &amp; Family</b> when paying. Thank you!
+    </div>
+    <a class="paypal-link" href="https://paypal.me/RizBoado" target="_blank" rel="noopener">PAY WITH PAYPAL</a>
+    <div class="discord-note"><b style="color:white">After payment:</b><br>Take a screenshot of your payment confirmation and send it on Discord to <b style="color:white">@kimmie_dokja_12</b> to process your account. Thank you!</div>
+  </div>
+</div>
+</body>
+</html>
